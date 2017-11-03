@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ToolView" customModule="PDF_Demo" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SmQ-u5-6dK">
+                    <rect key="frame" x="0.0" y="0.0" width="184" height="43"/>
+                    <state key="normal" image="thumbnails"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="754" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Tk-Oi-ir8">
+                    <rect key="frame" x="192" y="0.0" width="184" height="43"/>
+                    <state key="normal" image="edit-annotations"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="8Tk-Oi-ir8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="6ff-hO-3Fe"/>
+                <constraint firstItem="SmQ-u5-6dK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="AW6-Yq-fOx"/>
+                <constraint firstAttribute="bottom" secondItem="8Tk-Oi-ir8" secondAttribute="bottom" id="DUb-fO-jn7"/>
+                <constraint firstAttribute="trailing" secondItem="8Tk-Oi-ir8" secondAttribute="trailing" constant="-1" id="LsM-eY-31V"/>
+                <constraint firstItem="SmQ-u5-6dK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="N8M-sF-vb2"/>
+                <constraint firstAttribute="bottom" secondItem="SmQ-u5-6dK" secondAttribute="bottom" id="a8m-Cx-nG3"/>
+                <constraint firstItem="8Tk-Oi-ir8" firstAttribute="leading" secondItem="SmQ-u5-6dK" secondAttribute="trailing" constant="8" id="bpr-Rg-dwG"/>
+                <constraint firstItem="8Tk-Oi-ir8" firstAttribute="width" secondItem="SmQ-u5-6dK" secondAttribute="width" id="cQD-WO-tS3"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="editBtn" destination="8Tk-Oi-ir8" id="4Qe-o5-REd"/>
+                <outlet property="thumbBtn" destination="SmQ-u5-6dK" id="9ey-8d-SnI"/>
+            </connections>
+            <point key="canvasLocation" x="88.5" y="-654.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="edit-annotations" width="24" height="24"/>
+        <image name="thumbnails" width="24" height="24"/>
+    </resources>
+</document>
