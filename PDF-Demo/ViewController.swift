@@ -19,6 +19,7 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
     weak var observe : NSObjectProtocol?
     
     var doneButton : UIButton!
+    var clearButton : UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -63,6 +64,20 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         self.view.addSubview(doneButton)
         doneButton.bringSubview(toFront: self.view)
         doneButton.isHidden = true
+        
+        clearButton = UIButton(frame: CGRect(x: 20.0, y: 20, width: 80 , height: 40))
+        clearButton.setTitle("Clear", for: .normal)
+        clearButton.addTarget(self, action: #selector(clearBtnClick(_:)), for: .touchUpInside)
+        clearButton.setTitleColor(UIColor.black, for: .normal)
+        clearButton.layer.cornerRadius = 4
+        clearButton.layer.borderWidth = 1
+        clearButton.layer.borderColor = UIColor.black.cgColor
+        clearButton.backgroundColor = UIColor.white
+        clearButton.clipsToBounds = true
+        self.view.addSubview(clearButton)
+        clearButton.bringSubview(toFront: self.view)
+        clearButton.isHidden = true
+        
         let tapgesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(_:)))
         view.addGestureRecognizer(tapgesture)
         drawView.isHidden = true
@@ -74,9 +89,17 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         }
     }
     
+    @IBAction func clearBtnClick(_ sender: Any) {
+        drawView.clear()
+        pdfview.document?.page(at: 0)?.annotations.forEach {(annotation) in
+            pdfdocument?.page(at: 0)?.removeAnnotation(annotation)
+        }
+    }
+    
     @IBAction func doneBtnClick(_ sender: Any) {
         drawView.isHidden = true
         doneButton.isHidden = true
+        clearButton.isHidden = true
         
         for subview in self.pdfview.subviews {
             
@@ -107,6 +130,7 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
 //      
 //        drawView.backgroundColor = UIColor.red
 //        drawView.alpha = 0.5
+        clearButton.isHidden = false
         doneButton.isHidden = false
     }
     @objc func saveBtnClick(sender: UIButton) {
@@ -128,12 +152,12 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
             mailComposer.setSubject("Have you heard a swift?")
             mailComposer.setMessageBody("This is what they sound like.", isHTML: false)
             
-         
-                if let fileData = NSData(contentsOfFile: file1.path) {
-                    
-                    mailComposer.addAttachmentData(fileData as Data, mimeType: "application/pdf", fileName: "annotation")
-                }
-           
+            
+            if let fileData = NSData(contentsOfFile: file1.path) {
+                
+                mailComposer.addAttachmentData(fileData as Data, mimeType: "application/pdf", fileName: "annotation")
+            }
+            
             self.present(mailComposer, animated: true, completion: nil)
         }
         
@@ -155,7 +179,7 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        print("**** didReceiveMemoryWarning ****")
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
