@@ -16,6 +16,7 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
     let toolView = ToolView.instanceFromNib()
     
     var drawView : DrawingView!
+    var testDrawingView: TestDrawingView!
     weak var observe : NSObjectProtocol?
     
     var doneButton : UIButton!
@@ -45,10 +46,13 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         toolView.thumbBtn.addTarget(self, action: #selector(saveBtnClick), for: .touchUpInside)
         
         drawView = DrawingView()
+        testDrawingView = TestDrawingView()
         drawView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width , height: view.frame.height)
+        testDrawingView.frame = drawView.frame
         drawView.backgroundColor = UIColor.clear
-        pdfview.documentView?.addSubview(drawView)
-        drawView.bringSubview(toFront: self.view)
+        self.view.addSubview(drawView)
+//        self.view.addSubview(testDrawingView)
+//        drawView.bringSubview(toFront: self.view)
         drawView.delegate = self
         drawView.pdfview = self.pdfview
         
@@ -126,6 +130,7 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         }
 
         drawView.frame = CGRect(x: 4 , y: -4 , width: (pdfview.documentView?.frame.size.width)!  / pdfview.scaleFactor , height: (pdfview.documentView?.frame.size.height)!  / pdfview.scaleFactor)
+        testDrawingView.frame = drawView.frame
         drawView.lineWidth = (pdfview?.documentView?.frame.width)! / UIScreen.main.bounds.width
 //      
 //        drawView.backgroundColor = UIColor.red

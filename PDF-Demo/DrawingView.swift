@@ -10,6 +10,7 @@ import PDFKit
 protocol DrawingViewDelegate: class {
     func didEndDrawLine(bezierPath: UIBezierPath)
 }
+
 class DrawingView: UIView {
 	
 	var drawColor = UIColor.black
@@ -17,6 +18,7 @@ class DrawingView: UIView {
 	weak var delegate: DrawingViewDelegate?
 	private var lastPoint: CGPoint!
 	private var bezierPath: UIBezierPath!
+    private var pdfDocPath: UIBezierPath!
 	private var pointCounter: Int = 0
 	private let pointLimit: Int = 128
 	private var preRenderImage: UIImage!
@@ -39,12 +41,21 @@ class DrawingView: UIView {
 		bezierPath = UIBezierPath()
 		bezierPath.lineCapStyle = CGLineCap.round
 		bezierPath.lineJoinStyle = CGLineJoin.round
+        
+        pdfDocPath = bezierPath.copy() as! UIBezierPath
 	}
 	
 	// MARK: - Touch handling
-	
+    
+    var scaleFactor = 1.0 as CGFloat
+    
+    private func scaled(point: CGPoint) -> CGPoint {
+        return CGPoint(x: point.x * scaleFactor, y: point.y * scaleFactor)
+    }
+    
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        scaleFactor = pdfview?.scaleFactor ?? 1.0
 		let touch: AnyObject? = touches.first
 		lastPoint = touch!.location(in: self)
 		pointCounter = 0
@@ -53,10 +64,13 @@ class DrawingView: UIView {
 	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
 		let touch: AnyObject? = touches.first
+        
 		let newPoint = touch!.location(in: self)
-		
-		bezierPath.move(to: lastPoint)
-		bezierPath.addLine(to: newPoint)
+        bezierPath.move(to: lastPoint)
+        bezierPath.addLine(to: newPoint)
+        pdfDocPath.move(to: self.convert(lastPoint, to: pdfview?.documentView))
+        pdfDocPath.addLine(to: self.convert(newPoint, to: pdfview?.documentView))
+        
 		lastPoint = newPoint
 		
 		pointCounter += 1
@@ -77,7 +91,7 @@ class DrawingView: UIView {
 		pointCounter = 0
 		renderToImage()
 		setNeedsDisplay()
-        delegate?.didEndDrawLine(bezierPath: bezierPath)
+        delegate?.didEndDrawLine(bezierPath: pdfDocPath)
 		clear()
 	}
     
