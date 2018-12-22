@@ -14,7 +14,12 @@ protocol DrawingViewDelegate: class {
 class DrawingView: UIView {
 	
 	var drawColor = UIColor.black
-	var lineWidth: CGFloat = 1
+    var lineWidth: CGFloat = 1 {
+        didSet {
+            bezierPath.lineWidth = lineWidth
+            pdfDocPath.lineWidth = lineWidth
+        }
+    }
 	weak var delegate: DrawingViewDelegate?
 	private var lastPoint: CGPoint!
 	private var bezierPath: UIBezierPath!
@@ -42,7 +47,9 @@ class DrawingView: UIView {
 		bezierPath.lineCapStyle = CGLineCap.round
 		bezierPath.lineJoinStyle = CGLineJoin.round
         
-        pdfDocPath = bezierPath.copy() as! UIBezierPath
+        pdfDocPath = UIBezierPath()
+        pdfDocPath.lineCapStyle = CGLineCap.round
+        pdfDocPath.lineJoinStyle = CGLineJoin.round
 	}
 	
 	// MARK: - Touch handling
@@ -108,7 +115,7 @@ class DrawingView: UIView {
 			preRenderImage.draw(in: self.bounds)
 		}
 		
-		bezierPath.lineWidth = lineWidth
+		
 		drawColor.setFill()
 		drawColor.setStroke()
 		bezierPath.stroke()
@@ -127,7 +134,6 @@ class DrawingView: UIView {
 			preRenderImage.draw(in: self.bounds)
 		}
 		
-		bezierPath.lineWidth = lineWidth
 		drawColor.setFill()
 		drawColor.setStroke()
 		bezierPath.stroke()
