@@ -138,6 +138,7 @@ class DrawingView: UIView {
 	func clear() {
 		preRenderImage = nil
 		bezierPath.removeAllPoints()
+        pdfDocPath.removeAllPoints()
 		setNeedsDisplay()
 	}
 	
