@@ -21,6 +21,8 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
     
     var doneButton : UIButton!
     var clearButton : UIButton!
+    let swipe = UISwipeGestureRecognizer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,17 +32,17 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         
         pdfview = PDFView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         
-        let url = Bundle.main.url(forResource: "pdf-sample", withExtension: "pdf")
+        let url = Bundle.main.url(forResource: "pdf-sample-multi", withExtension: "pdf")
         pdfdocument = PDFDocument(url: url!)
         
         pdfview.document = pdfdocument
-        pdfview.displayMode = PDFDisplayMode.singlePageContinuous
+        pdfview.displayMode = PDFDisplayMode.singlePage
+        pdfview.displayDirection = .horizontal
         pdfview.autoScales = true
+        pdfview.delegate = self
         
         self.view.addSubview(pdfview)
-        
         self.view.addSubview(toolView)
-        toolView.bringSubview(toFront: self.view)
         
         toolView.editBtn.addTarget(self, action: #selector(editBtnClick), for: .touchUpInside)
         toolView.thumbBtn.addTarget(self, action: #selector(saveBtnClick), for: .touchUpInside)
@@ -50,11 +52,10 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         drawView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width , height: view.frame.height)
         testDrawingView.frame = drawView.frame
         drawView.backgroundColor = UIColor.clear
-        self.view.addSubview(drawView)
+//        self.view.addSubview(drawView)
 //        self.view.addSubview(testDrawingView)
-//        drawView.bringSubview(toFront: self.view)
         drawView.delegate = self
-        drawView.pdfview = self.pdfview
+//        drawView.pdfview = self.pdfview
         
         doneButton = UIButton(frame: CGRect(x: self.view.frame.width - 100, y: 20, width: 80 , height: 40))
         doneButton.setTitle("Done", for: .normal)
@@ -66,7 +67,6 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         doneButton.backgroundColor = UIColor.white
         doneButton.clipsToBounds = true
         self.view.addSubview(doneButton)
-        doneButton.bringSubview(toFront: self.view)
         doneButton.isHidden = true
         
         clearButton = UIButton(frame: CGRect(x: 20.0, y: 20, width: 80 , height: 40))
@@ -79,15 +79,23 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         clearButton.backgroundColor = UIColor.white
         clearButton.clipsToBounds = true
         self.view.addSubview(clearButton)
-        clearButton.bringSubview(toFront: self.view)
         clearButton.isHidden = true
         
         let tapgesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(_:)))
-        view.addGestureRecognizer(tapgesture)
+//        view.addGestureRecognizer(tapgesture)
         drawView.isHidden = true
+        
+        swipe.direction = UISwipeGestureRecognizerDirection.right
+        swipe.addTarget(self, action: #selector(swipepGesture(_:)))
+        self.view.addGestureRecognizer(swipe)
+    }
+    
+    @objc func swipepGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+        pdfview.goToNextPage(self)
     }
     
     @objc func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+        
         UIView.animate(withDuration: CATransaction.animationDuration()) { [weak self] in
             self?.toolView.alpha = 1 - (self?.toolView.alpha)!
         }
@@ -104,32 +112,11 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         drawView.isHidden = true
         doneButton.isHidden = true
         clearButton.isHidden = true
-        
-        for subview in self.pdfview.subviews {
-            
-            if let item = subview as? UIScrollView
-            {
-                item.isScrollEnabled = true
-            }
-            
-        }
-        
     }
     
     @objc func editBtnClick(sender: UIButton) {
         drawView.isHidden = false
-        self.pdfview.documentView!.bringSubview(toFront: drawView)
-
-        for subview in self.pdfview.subviews {
-            
-            if let item = subview as? UIScrollView
-            {
-                item.isScrollEnabled = false
-            }
-            
-        }
-
-        drawView.frame = CGRect(x: 4 , y: -4 , width: (pdfview.documentView?.frame.size.width)!  / pdfview.scaleFactor , height: (pdfview.documentView?.frame.size.height)!  / pdfview.scaleFactor)
+        drawView.frame = CGRect(x: 0 , y: 0 , width: (pdfview.documentView?.frame.size.width)!  / pdfview.scaleFactor , height: (pdfview.documentView?.frame.size.height)!  / pdfview.scaleFactor)
         testDrawingView.frame = drawView.frame
         drawView.lineWidth = (pdfview?.documentView?.frame.width)! / UIScreen.main.bounds.width
 //      
@@ -231,9 +218,13 @@ extension ViewController : DrawingViewDelegate {
         annotation.add(cloneBezierPath)
 
         pdfview.document?.page(at: 0)?.addAnnotation(annotation)
-        
-        
-    
     }
     
+}
+
+
+extension ViewController : PDFViewDelegate {
+    func pdfViewPerformGo(toPage sender: PDFView) {
+        
+    }
 }

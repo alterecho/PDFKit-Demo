@@ -15,6 +15,7 @@
 		3FEBE31E1F02057E00DE2722 /* ToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FEBE31D1F02057E00DE2722 /* ToolView.xib */; };
 		3FEBE3201F0206C600DE2722 /* ToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEBE31F1F0206C600DE2722 /* ToolView.swift */; };
 		5F74FEC121CEE08F0048F13D /* TestDrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F74FEC021CEE08F0048F13D /* TestDrawingView.swift */; };
+		5F74FEC321D164F40048F13D /* pdf-sample-multi.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 5F74FEC221D164F40048F13D /* pdf-sample-multi.pdf */; };
 		85F601341FA8E5D100174C00 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F601331FA8E5D100174C00 /* DrawingView.swift */; };
 		85F601361FA9000500174C00 /* pdf-sample.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 85F601351FA9000400174C00 /* pdf-sample.pdf */; };
 		85F601391FA90D6000174C00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85F601381FA90D6000174C00 /* MessageUI.framework */; };
@@ -31,6 +32,7 @@
 		3FEBE31D1F02057E00DE2722 /* ToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolView.xib; sourceTree = "<group>"; };
 		3FEBE31F1F0206C600DE2722 /* ToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolView.swift; sourceTree = "<group>"; };
 		5F74FEC021CEE08F0048F13D /* TestDrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDrawingView.swift; sourceTree = "<group>"; };
+		5F74FEC221D164F40048F13D /* pdf-sample-multi.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pdf-sample-multi.pdf"; sourceTree = "<group>"; };
 		85F601331FA8E5D100174C00 /* DrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		85F601351FA9000400174C00 /* pdf-sample.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pdf-sample.pdf"; sourceTree = "<group>"; };
 		85F601381FA90D6000174C00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -52,6 +54,7 @@
 			isa = PBXGroup;
 			children = (
 				85F601351FA9000400174C00 /* pdf-sample.pdf */,
+				5F74FEC221D164F40048F13D /* pdf-sample-multi.pdf */,
 				3FEBE3031F01E84F00DE2722 /* PDF-Demo */,
 				3FEBE3021F01E84F00DE2722 /* Products */,
 				85F601371FA90D6000174C00 /* Frameworks */,
@@ -155,6 +158,7 @@
 				85F601361FA9000500174C00 /* pdf-sample.pdf in Resources */,
 				3FEBE30C1F01E84F00DE2722 /* Assets.xcassets in Resources */,
 				3FEBE30A1F01E84F00DE2722 /* Main.storyboard in Resources */,
+				5F74FEC321D164F40048F13D /* pdf-sample-multi.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
