@@ -21,25 +21,37 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
     
     var doneButton : UIButton!
     var clearButton : UIButton!
-    let swipe = UISwipeGestureRecognizer()
+    let leftSwipe = UISwipeGestureRecognizer()
+    let rightSwipe = UISwipeGestureRecognizer()
+    
+    private var isAnnotating = false {
+        didSet {
+            if isAnnotating {
+                drawView.isHidden = false
+                clearButton.isHidden = false
+                doneButton.isHidden = false
+                removeGestures()
+            } else {
+                addGestures()
+                drawView.isHidden = true
+                doneButton.isHidden = true
+                clearButton.isHidden = true
+            }
+            
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
         toolView.frame = CGRect(x: 10, y: view.frame.height - 50, width: self.view.frame.width - 20, height: 40)
         
         pdfview = PDFView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
-        
         let url = Bundle.main.url(forResource: "pdf-sample-multi", withExtension: "pdf")
         pdfdocument = PDFDocument(url: url!)
-        
         pdfview.document = pdfdocument
         pdfview.displayMode = PDFDisplayMode.singlePage
         pdfview.displayDirection = .horizontal
         pdfview.autoScales = true
-        pdfview.delegate = self
         
         self.view.addSubview(pdfview)
         self.view.addSubview(toolView)
@@ -52,10 +64,10 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
         drawView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width , height: view.frame.height)
         testDrawingView.frame = drawView.frame
         drawView.backgroundColor = UIColor.clear
-//        self.view.addSubview(drawView)
+        self.view.addSubview(drawView)
 //        self.view.addSubview(testDrawingView)
         drawView.delegate = self
-//        drawView.pdfview = self.pdfview
+        drawView.pdfview = pdfview
         
         doneButton = UIButton(frame: CGRect(x: self.view.frame.width - 100, y: 20, width: 80 , height: 40))
         doneButton.setTitle("Done", for: .normal)
@@ -85,13 +97,24 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
 //        view.addGestureRecognizer(tapgesture)
         drawView.isHidden = true
         
-        swipe.direction = UISwipeGestureRecognizerDirection.right
-        swipe.addTarget(self, action: #selector(swipepGesture(_:)))
-        self.view.addGestureRecognizer(swipe)
+        leftSwipe.direction = UISwipeGestureRecognizer.Direction.left
+        rightSwipe.direction = UISwipeGestureRecognizer.Direction.right
+        leftSwipe.addTarget(self, action: #selector(swipepGesture(_:)))
+        rightSwipe.addTarget(self, action: #selector(swipepGesture(_:)))
+        
+        pdfview.gestureRecognizers?.forEach({ (recognizer) in
+            pdfview.removeGestureRecognizer(recognizer)
+        })
+        
+        isAnnotating = false
     }
     
-    @objc func swipepGesture(_ gestureRecognizer: UITapGestureRecognizer) {
-        pdfview.goToNextPage(self)
+    @objc func swipepGesture(_ gestureRecognizer: UISwipeGestureRecognizer) {
+        if gestureRecognizer.direction == .left {
+            pdfview.goToNextPage(self)
+        } else if gestureRecognizer.direction == .right {
+            pdfview.goToPreviousPage(self)
+        }
     }
     
     @objc func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
@@ -103,27 +126,25 @@ class ViewController: UIViewController , MFMailComposeViewControllerDelegate{
     
     @IBAction func clearBtnClick(_ sender: Any) {
         drawView.clear()
-        pdfview.document?.page(at: 0)?.annotations.forEach {(annotation) in
-            pdfdocument?.page(at: 0)?.removeAnnotation(annotation)
+        pdfview.currentPage?.annotations.forEach {(annotation) in
+            pdfview.currentPage?.removeAnnotation(annotation)
         }
     }
     
     @IBAction func doneBtnClick(_ sender: Any) {
-        drawView.isHidden = true
-        doneButton.isHidden = true
-        clearButton.isHidden = true
+        isAnnotating = false
     }
     
     @objc func editBtnClick(sender: UIButton) {
-        drawView.isHidden = false
+        
+        isAnnotating = true
         drawView.frame = CGRect(x: 0 , y: 0 , width: (pdfview.documentView?.frame.size.width)!  / pdfview.scaleFactor , height: (pdfview.documentView?.frame.size.height)!  / pdfview.scaleFactor)
         testDrawingView.frame = drawView.frame
         drawView.lineWidth = (pdfview?.documentView?.frame.width)! / UIScreen.main.bounds.width
 //      
 //        drawView.backgroundColor = UIColor.red
 //        drawView.alpha = 0.5
-        clearButton.isHidden = false
-        doneButton.isHidden = false
+        
     }
     @objc func saveBtnClick(sender: UIButton) {
       
@@ -217,14 +238,19 @@ extension ViewController : DrawingViewDelegate {
 
         annotation.add(cloneBezierPath)
 
-        pdfview.document?.page(at: 0)?.addAnnotation(annotation)
+        pdfview.currentPage?.addAnnotation(annotation)
     }
     
 }
 
-
-extension ViewController : PDFViewDelegate {
-    func pdfViewPerformGo(toPage sender: PDFView) {
-        
+extension ViewController {
+    func addGestures() {
+        self.view.addGestureRecognizer(leftSwipe)
+        self.view.addGestureRecognizer(rightSwipe)
+    }
+    
+    func removeGestures() {
+        self.view.removeGestureRecognizer(leftSwipe)
+        self.view.removeGestureRecognizer(rightSwipe)
     }
 }
